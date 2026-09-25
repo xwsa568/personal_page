@@ -1,4 +1,4 @@
-import { LiquidGlassEngine } from './vendor/liquid-glass.js';
+import { LiquidGlassEngine } from './vendor/liquid-glass.js?v=stable-7';
 
 export function initThemeSwitch() {
   const control = document.querySelector('.theme-switch');
@@ -21,16 +21,16 @@ export function initThemeSwitch() {
     thumb.style.transform = `translate3d(${center - width / 2}px,${22 - height / 2}px,0)`;
     if (!engine) return;
     if (amount < .005 && !pointer) {
-      scene.style.filter = 'none';
+      engine.setActive(false);
       return;
     }
     const filter = control.querySelector('filter');
-    if (filter) scene.style.filter = `url(#${filter.id})`;
+    engine.setActive(true);
     // The switch map compresses vertically more than horizontally, so the lens
     // shows the nearby track, rather than pulling the entire track into view.
     const displacement = -25 * Math.SQRT2 / Math.hypot(scene.offsetWidth, scene.offsetHeight);
     engine.setOptions({strength: displacement * amount, specular: 0});
-    const w = Math.round(width * 2) / 2, h = Math.round(height * 2) / 2;
+    const w = 46, h = 30;
     const key = `${w}:${h}`;
     if (key !== sizeKey) { engine.setOptions({width: w, height: h}); sizeKey = key; }
     engine.setPosition(center / 68, .5);

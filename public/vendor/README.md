@@ -8,7 +8,7 @@ bundled as a browser ES module without the React adapter.
 - Pinned commit: `8c615458a0496a007a0fd1d3aa7a9716698f8f03`
 - Source entry: `src/core/engine.ts`
 - License: MIT, copyright 2026 Pallav Agarwal; see `liquid-glass.LICENSE`.
-- Source changes: none. Only TypeScript compilation and bundling.
+- Local change: explicit filter activation prevents asynchronous map and resize updates from re-enabling idle filters in Safari.
 
 Reproduce from that upstream checkout:
 

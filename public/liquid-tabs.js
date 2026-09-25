@@ -1,4 +1,4 @@
-import { LiquidGlassEngine } from './vendor/liquid-glass.js';
+import { LiquidGlassEngine } from './vendor/liquid-glass.js?v=stable-7';
 
 // Aave-inspired spring selection, powered by Pallav Agarwal's SVG refraction engine.
 // Keep actual buttons in the filtered scene: no duplicate labels or inaccessible controls.
@@ -37,18 +37,18 @@ export function initLiquidTabs() {
     bar.style.setProperty('--lift', lift);
     if (!engine) return;
     if (lift < .005 && !drag) {
-      surface.style.filter = 'none';
+      engine.setActive(false);
       return;
     }
     const filter = bar.querySelector('filter');
-    if (filter) surface.style.filter = `url(#${filter.id})`;
+    engine.setActive(true);
     // Negative displacement samples outward: the track contracts inside the lens.
     // Pixel-based strength keeps that refraction consistent at every viewport.
-    const displacement = -10 * Math.SQRT2 / Math.hypot(surface.offsetWidth, surface.offsetHeight);
+    const displacement = -(mobile.matches ? 15 : 10) * Math.SQRT2 / Math.hypot(surface.offsetWidth, surface.offsetHeight);
     engine.setOptions({ strength: displacement * lift, specular: 0 });
     // Quantize half-pixels to avoid regenerating maps for imperceptible changes.
-    const width = Math.round(state.width * 2) / 2;
-    const height = Math.round(state.height * 2) / 2;
+    const width = Math.round(pressedShape(measure(selected)).width * 2) / 2;
+    const height = mobile.matches ? 84 : 50;
     const shape = `${width}:${height}`;
     if (shape !== lastShape) {
       engine.setOptions({ width, height });

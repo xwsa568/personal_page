@@ -237,6 +237,7 @@ var LiquidGlassEngine = class {
     this.rafId = null;
     this.resizeObserver = null;
     this.destroyed = false;
+    this.active = false;
     this.warnedFootprint = false;
     /** Called whenever a new displacement map has been generated. */
     this.onMap = null;
@@ -254,6 +255,10 @@ var LiquidGlassEngine = class {
     this.x = Math.min(1, Math.max(0, x));
     this.y = Math.min(1, Math.max(0, y));
     this.update();
+  }
+  setActive(active) {
+    this.active = active;
+    this.host.filtered.style.filter = active ? `url(#${this.filterEl.id})` : 'none';
   }
   getPosition() {
     return { x: this.x, y: this.y };
@@ -517,10 +522,10 @@ var LiquidGlassEngine = class {
     this.specularEl?.setAttribute("k2", String(o.specular));
     if (IS_SAFARI) {
       this.filterEl.id = `${this.id}-v${++this.version}`;
-      this.host.filtered.style.filter = `url(#${this.filterEl.id})`;
+      this.host.filtered.style.filter = this.active ? `url(#${this.filterEl.id})` : 'none';
     } else if (!this.filterEl.id) {
       this.filterEl.id = this.id;
-      this.host.filtered.style.filter = `url(#${this.id})`;
+      this.host.filtered.style.filter = this.active ? `url(#${this.id})` : 'none';
     }
     const shadow = this.host.shadow;
     if (shadow) {
