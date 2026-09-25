@@ -111,7 +111,7 @@ export function initLiquidTabs() {
     bar.setPointerCapture(event.pointerId);
     bar.classList.add('is-pressed');
     tab.classList.add('drag-over');
-    moveTo({ x: measured.x, width: (measured.width + 4) * 1.20, height: 50, lift: 1 });
+    moveTo({ x: measured.x, width: (measured.width + 4) * 1.20, height: measured.height + 20, lift: 1 });
   });
   bar.addEventListener('pointermove', (event) => {
     if (!drag || drag.id !== event.pointerId) return;
@@ -125,7 +125,7 @@ export function initLiquidTabs() {
     // The center tracks the finger immediately; dimensions ease toward each label.
     state.x = target.x = clamped;
     velocity.x = 0;
-    moveTo({ x: clamped, width: (measured.width + 4) * 1.20, height: 50, lift: 1 });
+    moveTo({ x: clamped, width: (measured.width + 4) * 1.20, height: measured.height + 20, lift: 1 });
     paint();
     rim.style.setProperty('--shine-x', `${Math.max(15, Math.min(85, 50 + event.movementX * 2))}%`);
     tabs.forEach((tab, i) => tab.classList.toggle('drag-over', i === index));
