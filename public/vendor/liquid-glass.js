@@ -256,6 +256,14 @@ var LiquidGlassEngine = class {
     this.y = Math.min(1, Math.max(0, y));
     this.update();
   }
+  // Scale a decoded displacement texture to the live animated lens bounds.
+  // Geometry and strength update atomically, without replacing feImage mid-frame.
+  setLensFrame({ x, y, width, height, strength }) {
+    this.x = Math.min(1, Math.max(0, x));
+    this.y = Math.min(1, Math.max(0, y));
+    Object.assign(this.options, { width, height, strength });
+    this.update();
+  }
   setActive(active) {
     this.active = active;
     this.host.filtered.style.filter = active ? `url(#${this.filterEl.id})` : 'none';

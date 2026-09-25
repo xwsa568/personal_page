@@ -1,5 +1,5 @@
-import { initThemeSwitch } from './theme-switch.js?v=stable-7';
-import { initLiquidTabs } from './liquid-tabs.js?v=stable-7';
+import { initThemeSwitch } from './theme-switch.js?v=lens-sync-14';
+import { initLiquidTabs } from './liquid-tabs.js?v=lens-sync-14';
 
 const profile = window.PROFILE;
 const byId = (id) => document.getElementById(id);

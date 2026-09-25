@@ -713,3 +713,28 @@ html[data-theme=dark] .liquid-indicator::after {
   .header::before { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; -webkit-mask-image: none; mask-image: none; bottom: 0; }
   html[data-theme=dark] .header::before { background: #151517; }
 }
+
+/* Mobile uses a stable frosted surface without an animated SVG filter. */
+@media(max-width:640px) {
+  .tab-surface::before {
+    background: rgb(255 255 255 / .68);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    backdrop-filter: blur(18px) saturate(1.2);
+  }
+  html[data-theme=dark] .tab-surface::before { background: rgb(30 30 34 / .72); }
+  .navigation.is-pressed [role=tab].drag-over { transform: none; }
+  .navigation { touch-action: none; }
+  .navigation .liquid-indicator {
+    background: rgb(0 0 0 / calc(.075 + .02 * var(--lift,0)));
+    border-color: rgb(255 255 255 / calc(.55 * var(--lift,0)));
+  }
+  html[data-theme=dark] .navigation .liquid-indicator {
+    background: rgb(255 255 255 / calc(.12 + .04 * var(--lift,0)));
+    border-color: rgb(255 255 255 / calc(.25 * var(--lift,0)));
+  }
+  .liquid-indicator::before { background: linear-gradient(145deg,#ffffffb3,#ffffff15 55%,#ffffff66); }
+}
+@media(max-width:640px) and (prefers-reduced-transparency:reduce) {
+  .tab-surface::before { background: #f5f5f7; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  html[data-theme=dark] .tab-surface::before { background: #303034; }
+}

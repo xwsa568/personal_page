@@ -1,7 +1,7 @@
-import { LiquidGlassEngine } from './vendor/liquid-glass.js?v=stable-7';
+import { LiquidGlassEngine } from './vendor/liquid-glass.js?v=lens-sync-14';
 
 // Aave-inspired spring selection, powered by Pallav Agarwal's SVG refraction engine.
-// Keep actual buttons in the filtered scene: no duplicate labels or inaccessible controls.
+// Mobile uses frosted CSS material; SVG refraction is desktop-only.
 export function initLiquidTabs() {
   const bar = document.querySelector('.navigation');
   const surface = bar.querySelector('.tab-surface');
@@ -15,14 +15,15 @@ export function initLiquidTabs() {
   let frame = 0;
   let lastTime = 0;
   let engine = null;
-  let lastShape = '';
+  let mapReady = false;
+
   const state = { x: 0, width: 80, height: 26, lift: 0 };
   const target = { ...state };
   const velocity = { x: 0, width: 0, height: 0, lift: 0 };
 
   function measure(index) {
     const tab = tabs[index];
-    return { x: tab.offsetLeft + tab.offsetWidth / 2, width: tab.offsetWidth + (mobile.matches ? 2 : -4), height: tab.offsetHeight + (mobile.matches ? 4 : -2), lift: 0 };
+    return { x: tab.offsetLeft + tab.offsetWidth / 2, width: tab.offsetWidth - (mobile.matches ? 6 : 4), height: tab.offsetHeight - (mobile.matches ? 6 : 2), lift: 0 };
   }
   function pressedShape(measured, x = measured.x) {
     return { x, width: mobile.matches ? measured.width * 1.28 : (measured.width + 4) * 1.20,
@@ -35,27 +36,25 @@ export function initLiquidTabs() {
     rim.style.transform = `translate3d(${state.x - state.width / 2}px,${top}px,0)`;
     const lift = Math.max(0, Math.min(1, state.lift));
     bar.style.setProperty('--lift', lift);
+    if (mobile.matches) {
+      engine?.setActive(false);
+
+      return;
+    }
     if (!engine) return;
     if (lift < .005 && !drag) {
       engine.setActive(false);
       return;
     }
-    const filter = bar.querySelector('filter');
+    if (!mapReady) { engine.setActive(false); return; }
+    const displacement = -10 * Math.SQRT2 / Math.hypot(surface.offsetWidth, surface.offsetHeight);
+    engine.setLensFrame({
+      x: state.x / surface.offsetWidth, y: .5,
+      width: state.width, height: state.height, strength: displacement * lift,
+    });
     engine.setActive(true);
-    // Negative displacement samples outward: the track contracts inside the lens.
-    // Pixel-based strength keeps that refraction consistent at every viewport.
-    const displacement = -(mobile.matches ? 15 : 10) * Math.SQRT2 / Math.hypot(surface.offsetWidth, surface.offsetHeight);
-    engine.setOptions({ strength: displacement * lift, specular: 0 });
-    // Quantize half-pixels to avoid regenerating maps for imperceptible changes.
-    const width = Math.round(pressedShape(measure(selected)).width * 2) / 2;
-    const height = mobile.matches ? 84 : 50;
-    const shape = `${width}:${height}`;
-    if (shape !== lastShape) {
-      engine.setOptions({ width, height });
-      lastShape = shape;
-    }
-    engine.setPosition(state.x / surface.offsetWidth, .5);
   }
+
   function animate(time) {
     const dt = Math.min((time - (lastTime || time - 16)) / 1000, .032);
     lastTime = time;
@@ -144,13 +143,14 @@ export function initLiquidTabs() {
     clearPressed();
     if (bar.hasPointerCapture(id)) bar.releasePointerCapture(id);
     select(index, { focus: !cancel, history: !cancel });
-    setTimeout(() => { suppressClick = false; }, 0);
+
   }
   bar.addEventListener('pointerup', (event) => release(event));
   bar.addEventListener('pointercancel', (event) => release(event, true));
   bar.addEventListener('lostpointercapture', (event) => release(event, true));
   bar.addEventListener('click', (event) => {
-    if (suppressClick) { suppressClick = false; return; }
+    if (suppressClick && event.detail !== 0) { suppressClick = false; return; }
+    suppressClick = false;
     const tab = event.target.closest('[role="tab"]');
     if (tab) select(tabs.indexOf(tab));
   });
@@ -173,7 +173,7 @@ export function initLiquidTabs() {
   fromHash(true);
   try {
     engine = new LiquidGlassEngine({ container: bar, filtered: surface, defsHost: bar.querySelector('.glass-defs') }, {
-      width: state.width, height: state.height, radius: 'auto',
+      width: 140, height: 50, radius: 'auto',
       strength: 0, chromaticAberration: 0, blur: 0,
       depth: 13, curvature: .82, glow: 0, edgeHighlight: 0,
       specular: 0, quality: 256,
@@ -189,6 +189,9 @@ export function initLiquidTabs() {
     filter.querySelectorAll('feComposite').forEach(node => {
       if (node.getAttribute('in') === 'dispR' || node.getAttribute('in2') === 'dispB') node.remove();
     });
+    const map = new Image();
+    map.src = engine.getMapUrl();
+    map.decode().then(() => { mapReady = true; paint(); }).catch(() => {});
     bar.classList.add('has-refraction');
     paint();
   } catch (error) {
@@ -196,6 +199,8 @@ export function initLiquidTabs() {
     bar.querySelector('.glass-defs').replaceChildren();
     console.warn('Glass refraction unavailable; using the accessible CSS tab indicator.', error);
   }
+
+  mobile.addEventListener('change', () => moveTo(measure(selected), true));
   new ResizeObserver(() => { if (!drag) moveTo(measure(selected), true); }).observe(surface);
   document.fonts.ready.then(() => { if (!drag) moveTo(measure(selected), true); });
   reduced.addEventListener('change', () => moveTo(measure(selected), true));

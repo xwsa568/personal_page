@@ -1,4 +1,4 @@
-import { LiquidGlassEngine } from './vendor/liquid-glass.js?v=stable-7';
+import { LiquidGlassEngine } from './vendor/liquid-glass.js?v=lens-sync-14';
 
 export function initThemeSwitch() {
   const control = document.querySelector('.theme-switch');
