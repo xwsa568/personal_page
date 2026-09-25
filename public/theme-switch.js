@@ -68,7 +68,7 @@ export function initThemeSwitch() {
   control.addEventListener('pointermove', e => {
     if (!pointer || pointer.id !== e.pointerId) return;
     const delta = e.clientX - pointer.start;
-    if (Math.abs(delta) > 3) pointer.moved = true;
+    if (Math.abs(delta) > 8) pointer.moved = true;
     if (!pointer.moved) return;
     position = goal = clamp(pointer.initial + delta / 16); speed = 0; paint();
   });
@@ -79,12 +79,18 @@ export function initThemeSwitch() {
     control.classList.remove('is-held');
     if (control.hasPointerCapture(id)) control.releasePointerCapture(id);
     setTheme(next, !cancelled);
-    setTimeout(() => { suppressClick = false; }, 0);
+
   }
   control.addEventListener('pointerup', e => release(e));
   control.addEventListener('pointercancel', e => release(e, true));
   control.addEventListener('lostpointercapture', e => release(e, true));
-  control.addEventListener('click', () => { if (!suppressClick) setTheme(!dark); });
+  control.addEventListener('click', e => {
+    // A touch click can arrive after pointerup's task; consume it once.
+    // Keyboard and assistive activation have no pointer detail.
+    if (suppressClick && e.detail !== 0) { suppressClick = false; return; }
+    suppressClick = false;
+    setTheme(!dark);
+  });
   control.addEventListener('keydown', e => {
     if (e.key === 'Escape' && pointer) release({pointerId:pointer.id}, true);
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); setTheme(e.key === 'ArrowRight'); }

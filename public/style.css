@@ -646,3 +646,41 @@ html[data-theme=dark] .tab-surface::before {
   html { scroll-padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
 }
 @media(max-width:640px) { .header { flex-direction: row; align-items: center; } }
+
+/* Clear glass: retain edge reflections without a frosted fill. */
+.tab-surface::before {
+  background: rgb(255 255 255 / .12);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-theme=dark] .tab-surface::before { background: rgb(25 25 28 / .18); }
+@media(prefers-reduced-transparency:reduce) {
+  .tab-surface::before { background: #f5f5f7; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  html[data-theme=dark] .tab-surface::before { background: #303034; }
+}
+
+/* A narrow optical rim appears only while the lens is lifted. */
+.liquid-indicator::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  padding: 1.5px; pointer-events: none; opacity: var(--lift, 0);
+  background: conic-gradient(from 20deg,
+    #ffffffeb 0deg, #e4c98170 48deg, #ffffff20 85deg,
+    #87d5e28c 130deg, #ffffffe6 175deg, #dcc38780 220deg,
+    #ffffff15 263deg, #91dce080 305deg, #ffffffeb 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+.liquid-indicator::after {
+  content: ''; position: absolute; inset: 1px; border-radius: inherit;
+  pointer-events: none; opacity: var(--lift, 0);
+  box-shadow: inset 0 2px 2px #ffffffb3, inset 1px 0 3px #9ddde52e,
+    inset -1px -2px 3px #d3bb7733, inset 0 -1px 1px #ffffffa6;
+}
+.navigation.is-pressed .liquid-indicator { border-color: #a5a9b04d; }
+html[data-theme=dark] .liquid-indicator::before { opacity: calc(var(--lift, 0) * .65); }
+html[data-theme=dark] .liquid-indicator::after {
+  box-shadow: inset 0 1.5px 2px #ffffff66, inset 1px 0 3px #9ddde52e,
+    inset -1px -2px 3px #d3bb7733, inset 0 -1px 1px #ffffff40;
+}

@@ -7,6 +7,7 @@ export function initLiquidTabs() {
   const surface = bar.querySelector('.tab-surface');
   const tabs = [...bar.querySelectorAll('[role="tab"]')];
   const rim = bar.querySelector('.liquid-indicator');
+  const mobile = matchMedia('(max-width: 640px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let selected = 0;
   let drag = null;
@@ -21,7 +22,11 @@ export function initLiquidTabs() {
 
   function measure(index) {
     const tab = tabs[index];
-    return { x: tab.offsetLeft + tab.offsetWidth / 2, width: tab.offsetWidth - 4, height: tab.offsetHeight - 2, lift: 0 };
+    return { x: tab.offsetLeft + tab.offsetWidth / 2, width: tab.offsetWidth + (mobile.matches ? 2 : -4), height: tab.offsetHeight + (mobile.matches ? 4 : -2), lift: 0 };
+  }
+  function pressedShape(measured, x = measured.x) {
+    return { x, width: mobile.matches ? measured.width * 1.28 : (measured.width + 4) * 1.20,
+      height: mobile.matches ? 84 : 50, lift: 1 };
   }
   function paint() {
     const top = (surface.offsetHeight - state.height) / 2;
@@ -111,7 +116,7 @@ export function initLiquidTabs() {
     bar.setPointerCapture(event.pointerId);
     bar.classList.add('is-pressed');
     tab.classList.add('drag-over');
-    moveTo({ x: measured.x, width: (measured.width + 4) * 1.20, height: measured.height + 20, lift: 1 });
+    moveTo(pressedShape(measured));
   });
   bar.addEventListener('pointermove', (event) => {
     if (!drag || drag.id !== event.pointerId) return;
@@ -125,7 +130,7 @@ export function initLiquidTabs() {
     // The center tracks the finger immediately; dimensions ease toward each label.
     state.x = target.x = clamped;
     velocity.x = 0;
-    moveTo({ x: clamped, width: (measured.width + 4) * 1.20, height: measured.height + 20, lift: 1 });
+    moveTo(pressedShape(measured, clamped));
     paint();
     rim.style.setProperty('--shine-x', `${Math.max(15, Math.min(85, 50 + event.movementX * 2))}%`);
     tabs.forEach((tab, i) => tab.classList.toggle('drag-over', i === index));
@@ -169,9 +174,20 @@ export function initLiquidTabs() {
   try {
     engine = new LiquidGlassEngine({ container: bar, filtered: surface, defsHost: bar.querySelector('.glass-defs') }, {
       width: state.width, height: state.height, radius: 'auto',
-      strength: 0, chromaticAberration: .18, blur: 0,
+      strength: 0, chromaticAberration: 0, blur: 0,
       depth: 13, curvature: .82, glow: 0, edgeHighlight: 0,
       specular: 0, quality: 256,
+    });
+    // RGB arithmetic adds alpha three times on transparent surfaces.
+    // Keep one full-color displacement so the clear track retains its alpha.
+    const filter = bar.querySelector('filter');
+    const displacements = [...filter.querySelectorAll('feDisplacementMap')];
+    displacements[2].setAttribute('result', 'lensResult');
+    filter.querySelectorAll('feColorMatrix').forEach(node => {
+      if (['dispR', 'dispG', 'dispB'].includes(node.getAttribute('result'))) node.remove();
+    });
+    filter.querySelectorAll('feComposite').forEach(node => {
+      if (node.getAttribute('in') === 'dispR' || node.getAttribute('in2') === 'dispB') node.remove();
     });
     bar.classList.add('has-refraction');
     paint();
