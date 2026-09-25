@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Computer vision and generative models at Korea University." />
+    <title>Youngseo Kim</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <script src="./theme-init.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./profile.js?v=photo-1"></script>
+    <script src="./app.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="page-shell">
+      <header class="header">
+        <div class="glass navigation" role="tablist" aria-label="Page navigation">
+          <div class="liquid-indicator" aria-hidden="true"><div class="liquid-glint"></div></div>
+          <div class="tab-surface" role="presentation">
+          <button id="tab-home" class="active" role="tab" aria-selected="true" aria-controls="home" tabindex="0" data-panel="home">Home</button>
+          <button id="tab-publications" role="tab" aria-selected="false" aria-controls="publications" tabindex="-1" data-panel="publications">Publications</button>
+          <button id="tab-work" role="tab" aria-selected="false" aria-controls="work" tabindex="-1" data-panel="work">Projects</button>
+          <button id="tab-about" role="tab" aria-selected="false" aria-controls="about" tabindex="-1" data-panel="about">About</button>
+          </div>
+          <div class="glass-defs" aria-hidden="true"></div>
+        </div>
+        <div class="theme-control">
+          <button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark mode" title="Dark mode">
+            <span class="switch-scene" aria-hidden="true"><span class="switch-track"><span class="switch-fill"></span></span></span>
+            <span class="switch-thumb" aria-hidden="true"></span>
+            <span class="switch-defs" aria-hidden="true"></span>
+          </button>
+          <svg class="theme-moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 13.2A8.5 8.5 0 0 1 10.8 3.5a8.5 8.5 0 1 0 9.7 9.7Z"/></svg>
+        </div>
+      </header>
+      <main id="main">
+        <section class="home-panel tab-panel" id="home" role="tabpanel" aria-labelledby="tab-home" tabindex="0">
+          <div class="hero">
+            <img class="profile-photo" id="profile-photo" src="./profile.jpg" alt="Youngseo Kim at Korea University" width="240" height="240" />
+            <div class="hero-copy">
+              <h1 id="profile-name">Youngseo Kim</h1>
+              <p class="intro"><span id="profile-intro"></span> <a id="lab-link" href="https://miil.korea.ac.kr/" target="_blank" rel="noopener noreferrer">Multimodal Interactive Intelligence Laboratory (MIIL)</a>, supervised by <a id="advisor-link" href="https://phseo.github.io/" target="_blank" rel="noopener noreferrer">Prof. Paul Hongsuck Seo</a>.</p>
+              <p class="research-intro" id="research-intro"></p>
+              <div id="home-social-links" class="social-links" aria-label="Contact links"></div>
+              <div class="hero-actions"><a class="button primary" href="#publications">Publications <span aria-hidden="true">↗</span></a><a class="button glass" href="#about">About me <span aria-hidden="true">↗</span></a></div>
+            </div>
+          </div>
+          <section class="news-section" aria-labelledby="news-heading">
+            <div class="news-heading"><h2 id="news-heading">News</h2><p>Research updates &amp; milestones</p></div>
+            <div class="news-empty content-empty" id="news-empty">
+              <p>Updates coming soon.</p>
+            </div>
+            <ul class="news-list" id="news-recent"></ul>
+            <details class="news-archive" id="news-archive" hidden>
+              <summary>Show older news <span id="news-count"></span></summary>
+              <ul class="news-list" id="news-older"></ul>
+            </details>
+          </section>
+        </section>
+        <section class="publications-section tab-panel" id="publications" role="tabpanel" aria-labelledby="tab-publications" tabindex="0" hidden>
+          <div class="section-heading"><div><h2>Publications</h2></div><p>Research and selected publications</p></div>
+          <div id="publication-list"></div>
+          <div class="publication-empty content-empty" id="publication-empty"><h3>Work in progress.</h3><p>Publications will appear here as the research develops.</p></div>
+        </section>
+        <section class="work-section tab-panel" id="work" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
+          <div class="section-heading"><div><h2 id="work-heading">Projects</h2></div><p>Recognition and selected work</p></div>
+          <div id="project-grid" class="project-grid"></div>
+        </section>
+        <section class="about-card tab-panel" id="about" role="tabpanel" aria-labelledby="tab-about" tabindex="0" hidden>
+          <div class="about-overview">
+            <h2 id="about-heading">Youngseo Kim</h2>
+            <p id="profile-about"></p>
+            <div class="interests" id="interests"></div>
+            <div class="contact"><div id="social-links" class="social-links"></div><p id="contact-empty">Contact details coming soon.</p></div>
+          </div>
+          <div class="about-history">
+            <section id="about-education" aria-labelledby="education-heading"><h3 id="education-heading">Education</h3><ul id="education-list"></ul></section>
+            <section id="about-research" aria-labelledby="research-heading"><h3 id="research-heading">Research Experience</h3><div id="research-list" class="cv-list"></div></section>
+            <section id="about-awards" aria-labelledby="awards-heading"><h3 id="awards-heading">Awards &amp; Honors</h3><div id="awards-list" class="cv-list"></div></section>
+          </div>
+        </section>
+      </main>
+      <footer><span>© <span id="year"></span> <span id="copyright-name">Youngseo Kim</span></span></footer>
+      <p class="template-note" id="template-note">Profile photo is a placeholder.</p>
+    </div>
+    <dialog id="project-dialog"><button class="dialog-close" aria-label="Close project details" autofocus><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button><p class="eyebrow" id="dialog-label"></p><h2 id="dialog-title"></h2><div class="dialog-content"><div id="dialog-media"></div><div class="dialog-copy"><p id="dialog-description"></p><div id="dialog-link"></div></div></div></dialog>
+    <noscript><p class="noscript">Please enable JavaScript to view the profile and projects.</p></noscript>
+  </body>
+</html>
