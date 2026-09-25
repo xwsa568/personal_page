@@ -31,6 +31,7 @@ byId('lab-link').href = safeUrl(profile.lab.url) || '#about';
 setText('advisor-link', profile.advisor.name);
 byId('advisor-link').href = safeUrl(profile.advisor.url) || '#about';
 byId('profile-photo').src = profile.photo;
+byId('profile-photo').parentElement.style.setProperty('--portrait-image', `url(${JSON.stringify(profile.photo)})`);
 byId('profile-photo').alt = profile.photoAlt;
 byId('profile-about').replaceChildren();
 setText('about-heading', profile.name);
