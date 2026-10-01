@@ -2,6 +2,9 @@
 
 Youngseo Kim's personal website.
 
+Profile content is managed in `public/profile.js`. The Home and About CV links
+open `public/youngseo_kim_cv.pdf`; replace this file to update the CV.
+
 ### References
 
 - [Apple Liquid Glass](https://developer.apple.com/design/human-interface-guidelines/materials)

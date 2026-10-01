@@ -470,6 +470,7 @@ html[data-theme=dark] .project-preview { background: #232326; }
 
 .about-history .cv-organization { font-size: 18px; font-weight: 500; }
 .about-history #research-list h4 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 7px 0; }
+.about-history #teaching-list h4 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 7px 0; }
 .about-history #awards-list h4 { font-size: 17px; line-height: 1.6; }
 .about-history #awards-list .cv-organization { font-size: 14px; font-weight: 500; }
 .about-history .cv-detail { font-size: 13px; }
@@ -532,6 +533,8 @@ footer { justify-content: flex-end; }
 .about-history #education-list h4 { margin: 4px 0 0; }
 
 .about-history #education-list .education-advisor { margin-top: 8px; font-size: 13px; }
+.about-history #education-list .education-detail { margin-top: 8px; font-size: 13px; }
+.project-card.text-project { grid-template-columns: minmax(0, 1fr); }
 
 
 /* The filled Home action keeps a stable, high-contrast surface. */
