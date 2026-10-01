@@ -20,7 +20,7 @@ window.PROFILE = {
     { degree: "B.S. in Computer Science and Engineering", period: "Mar. 2019 – Aug. 2025", detail: "GPA: 3.86 / 4.5" }
   ],
   interests: ["Flow-based Generative Models", "One-step Generative Models", "Image and Video Generation", "Generative Model Dynamics and Stability"],
-  cv: "./youngseo_kim_cv.pdf",
+  cv: "./youngseo_kim_cv.pdf?v=e6104b6fd25c",
   email: "xwsa568@korea.ac.kr",
   github: "https://github.com/xwsa568",
   links: [
